@@ -1,0 +1,1636 @@
+<!DOCTYPE html>
+<html lang="uk" xmlns="http://www.w3.org/1999/html">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MyTangoCoding – Marharyta Zazulia</title>
+  <meta name="description" content="Python-розробниця з Буенос-Айреса. Танго та код — це слухати, імпровізувати, довіряти.">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root{
+      --bg:#0f0a0a;--gold:#d4af37;--gold-light:#e6c567;--light:#f5e6e1;--dark:#0a0505;
+      --glass:rgba(15,10,10,0.75);--border:rgba(212,175,55,0.4);--shadow:0 15px 40px rgba(0,0,0,0.6);
+    }
+
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{margin:0;background:var(--bg);color:var(--light);font-family:'Montserrat',sans-serif;line-height:1.8;transition:all .6s;overflow-x:hidden;}
+    h1,h2,h3{font-family:'Playfair Display',serif;color:var(--gold);}
+    .container{max-width:1350px;margin:0 auto;padding:0 20px;}
+
+    /* Хедер */
+    header{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:100px 20px;position:relative;}
+    header::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at center,rgba(155,29,60,0.12),transparent 70%);pointer-events:none;}
+    .logo{font-size:clamp(3.6rem,9vw,5rem);letter-spacing:3px;background:linear-gradient(90deg,var(--gold),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+    .tagline{font-size:clamp(1.2rem,3.3vw,1.25rem);max-width:900px;margin:30px auto 40px;opacity:0.95;}
+    .btn{background:linear-gradient(45deg,var(--gold),var(--gold-light));color:#000;padding:18px 60px;border-radius:100px;font-weight:700;font-size:1.35rem;box-shadow:0 10px 30px rgba(212,175,55,0.4);transition:.4s;cursor:pointer;}
+    .btn:hover{transform:translateY(-8px);box-shadow:0 20px 50px rgba(212,175,55,0.6);}
+
+    /* Фіксовані елементи */
+    #milonga-live{
+			position:fixed;
+			top:16px;
+			left:16px;
+			z-index:1000;
+			background:var(--glass);
+			backdrop-filter:blur(12px);
+			padding:8px 16px;
+			border-radius:40px;
+			border:1px solid var(--gold);
+			font-weight:500;
+			font-size:0.92rem;
+			color:var(--light);
+			display:flex;
+			align-items:center;
+			gap:10px;
+			box-shadow:0 6px 20px rgba(0,0,0,0.4);
+			opacity:0.85;
+			transition:all .4s;
+		}
+		#milonga-live:hover{opacity:1;transform:scale(1.04);}
+
+		#milonga-live::before{
+			content:"";
+			width:28px;
+			height:28px;
+			background:url('images/tango-gold.png') center/contain no-repeat;
+			opacity:0.9;
+		}
+
+		#milonga-live .big{
+			font-size:1.3rem;        /* трохи менший, ніж був */
+			font-weight:800;
+			color:var(--gold);
+			min-width:36px;
+			text-align:center;
+		}
+    .big{font-size:3.4rem;color:var(--gold);font-weight:800;}
+    .controls{position:fixed;top:20px;right:20px;z-index:1000;display:flex;gap:12px;background:var(--glass);backdrop-filter:blur(16px);padding:10px 18px;border-radius:50px;border:1px solid var(--gold);box-shadow:var(--shadow);}
+    .controls button{background:none;border:none;color:var(--light);font-size:1rem;cursor:pointer;opacity:0.7;transition:.3s;}
+    .controls button.active,.controls button:hover{opacity:1;color:var(--gold);transform:scale(1.15);}
+
+		/* Прибираємо підкреслення у всіх посилань на всьому сайті */
+		a {
+			text-decoration: none !important;
+			color: inherit;
+		}
+
+		/* При наведенні — легке підсвічування */
+		a:hover {
+			color: var(--gold-light) !important;
+			opacity: 0.9;
+		}
+
+		/* Модальне вікно message
+		.modal-overlay{
+			display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92);
+			justify-content:center; align-items:center; z-index:999; backdrop-filter:blur(8px);
+		}
+		.modal-content{
+			background:var(--glass); padding:40px; border-radius:20px; max-width:520px; width:90%;
+			position:relative; border:3px solid var(--gold); box-shadow:0 20px 60px rgba(212,175,55,0.3);
+		}
+		.modal-close{
+			position:absolute; top:12px; right:20px; font-size:3rem; cursor:pointer;
+			color:var(--gold); font-weight:300; transition:.3s;
+		}
+		.modal-close:hover{transform:scale(1.2); opacity:0.8;}
+		.modal-title{text-align:center; margin:0 0 30px; color:var(--gold-light);}
+
+		#contact-form input, #contact-form textarea, #contact-form select{
+			width:100%; padding:14px; margin:12px 0; border-radius:12px; border:none;
+			background:#222; color:var(--light); font-size:1rem; font-family:inherit;
+		}
+		#contact-form input:focus, #contact-form textarea:focus, #contact-form select:focus{
+			outline:2px solid var(--gold); background:#2a2a2a;
+		}
+		#contact-form button{
+			width:100%; background:linear-gradient(45deg,var(--gold),var(--gold-light));
+			color:#000; padding:16px; border:none; border-radius:50px; font-weight:bold;
+			font-size:1.2rem; cursor:pointer; margin-top:10px; transition:.3s;
+		}
+		#contact-form button:hover{transform:translateY(-3px); box-shadow:0 10px 30px rgba(212,175,55,0.4);}
+
+		.timezone-wrapper{position:relative;}
+		#timezone-select{position:absolute; top:0; left:0; right:0; bottom:0; opacity:0; cursor:pointer;}
+		#form-status{margin-top:20px; text-align:center; font-weight:600; min-height:30px;}
+
+		/* Уніфікуємо вигляд усіх полів форми */
+		#contact-form input,
+		#contact-form textarea {
+			width: 100%;
+			padding: 14px 14px 14px 16px;
+			margin: 13px 0;
+			border-radius: 12px;
+			border: none;
+			background: #222;
+			color: var(--light);
+			font-size: 1rem;
+			font-family: inherit;
+			box-sizing: border-box;
+		}
+
+		/* Плейсхолдери — один колір, один стиль */
+		#contact-form input::placeholder,
+		#contact-form textarea::placeholder {
+			color: #888;
+			opacity: 1;
+			font-style: italic;
+		}
+
+		/* Дата-пікер у темному стилі (Chrome/Edge/Safari) */
+		#contact-form input[type="date"] {
+			color: var(--light);
+			background: #222;
+		}
+		#contact-form input[type="date"]::-webkit-calendar-picker-indicator {
+			filter: invert(0.7);
+			cursor: pointer;
+		}
+
+		/* Фокус — золота обводка */
+		#contact-form input:focus,
+		#contact-form textarea:focus {
+			outline: 2px solid var(--gold);
+			background: #2a2a2a;
+		}
+
+		/* УНІФІКОВАНІ КАРТКИ — однаковий розмір, рамка, тінь */
+		.unified-card{
+			width:350px;
+			height:380px;
+			flex-shrink:0;
+			border-radius:18px;
+			overflow:hidden;
+			border:4px solid var(--gold);
+			box-shadow:var(--shadow);
+			background:var(--glass);
+			backdrop-filter:blur(12px);
+			transition:transform .4s,box-shadow .4s;
+		}
+		.unified-card:hover{
+			transform:translateY(-10px);
+			box-shadow:0 25px 60px rgba(212,175,55,0.45);
+		}
+
+		/* Фото в картці */
+		.unified-card.photo-card img{
+			width:100%;
+			height:100%;
+			object-fit:cover;
+		}
+
+		/* Soft-картки */
+		.unified-card.soft-card{
+			padding:32px 28px;
+			display:flex;
+			align-items:center;
+			justify-content:center;
+			text-align:center;
+			font-style:italic;
+			font-size:1.15rem;
+			line-height:1.7;
+		}
+		.unified-card.soft-card strong{
+			color:var(--gold-light);
+		}
+
+		/* Картка з підсумком */
+		.conclusion-card {
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			height: 380px; /* або твоя висота */
+			padding: 40px 30px;
+		}
+
+		.conclusion-main {
+			text-align: center;
+			font-style: italic;
+			line-height: 1.9;
+		}
+
+		.conclusion-main .years {
+			font-size: 1.5rem;
+			color: var(--gold-light);
+			text-shadow: 0 0 20px rgba(212,175,55,0.5);
+		}
+
+		.conclusion-footer {
+			margin-top: auto;
+			text-align: center;
+		}
+
+		.gold-line {
+			width: 80%;
+			margin: 20px auto;
+			border: none;
+			height: 2px;
+			background: linear-gradient(90deg, transparent, var(--gold), transparent);
+			opacity: 0.8;
+		}
+
+		.conclusion-text {
+			font-size: 1.1rem;
+			font-style: italic;
+			color: var(--gold-light);
+			opacity: 0.9;
+			margin: 0;
+		}
+
+		.about-carousel .carousel-content{gap:24px;}
+		.about-carousel:hover .carousel-arrow{display:flex;}
+
+		/* Мобілка */
+		@media(max-width:860px){
+			.unified-card{width:300px;height:340px;}
+			.unified-card.soft-card{font-size:1.05rem;padding:24px;}
+			.carousel-arrow{display:none !important;}
+		}
+
+		/* Повністю ховаємо скролбар, але залишаємо можливість гортати */
+		.carousel-wrapper::-webkit-scrollbar {
+			height: 0 !important;
+			width: 0 !important;
+			background: transparent;
+		}
+
+		.carousel-wrapper {
+			-ms-overflow-style: none;     /* IE та Edge */
+			scrollbar-width: none;        /* Firefox */
+		}
+
+		/* Додатково для Safari */
+		.carousel-wrapper {
+			-webkit-overflow-scrolling: touch;
+		}
+
+    /* Цитата + код дня */
+    #tango-code-today{background:var(--glass);backdrop-filter:blur(12px);border-radius:20px;padding:40px;margin:40px auto;max-width:900px;border-left:6px solid var(--gold);box-shadow:var(--shadow);}
+    #tango-code-today pre{background:#111;padding:20px;border-radius:12px;overflow-x:auto;margin:20px 0;color:#0f0;font-size:0.94rem;}
+    #tango-code-today .comment{color:#888;font-style:italic;}
+
+		/* === СТРІЛОЧКИ без тексту — працює для ВСІХ каруселей === */
+		.carousel-arrow{
+			position:absolute;
+			top:50%;
+			transform:translateY(-50%,-50%);
+			width:52px;
+			height:52px;
+			background:var(--glass);
+			backdrop-filter:blur(12px);
+			border:2px solid var(--gold);
+			border-radius:50%;
+			color:var(--gold);
+			font-size:2.4rem;
+			font-weight:300;
+			display:flex;
+			align-items:center;
+			justify-content:center;
+			cursor:pointer;
+			z-index:10;
+			user-select:none;
+			box-shadow:var(--shadow);
+			opacity:0;
+			transition:all .4s;
+		}
+		.carousel:hover .carousel-arrow{opacity:1;}
+		.carousel-arrow:hover{transform:translateY(-50%) scale(1.15);background:rgba(212,175,55,0.25);}
+		.carousel-arrow.left{left:10px;}
+		.carousel-arrow.right{right:10px;}
+
+		/* На мобілці стрілки ховаємо повністю */
+		@media(max-width:860px){
+			.carousel-arrow{display:none !important;}
+		}
+
+    /* Карусель */
+    .carousel{position:relative;margin:80px 0;}
+    .carousel-arrow{display:none;position:absolute;top:50%;transform:translateY(-50%);background:var(--glass);width:50px;height:50px;border-radius:50%;align-items:center;justify-content:center;font-size:2.2rem;color:var(--gold);cursor:pointer;z-index:10;backdrop-filter:blur(10px);border:2px solid var(--gold);box-shadow:var(--shadow);}
+    .carousel:hover .carousel-arrow{display:flex;}
+    .carousel-arrow.left{left:-20px;}
+    .carousel-arrow.right{right:-20px;}
+    .carousel-wrapper{overflow-x:auto;scroll-behavior:smooth;padding:20px 0;}
+    .carousel-wrapper::-webkit-scrollbar{height:6px;background:transparent;}
+    .carousel-wrapper::-webkit-scrollbar-thumb{background:var(--gold);border-radius:4px;}
+    .carousel-content{display:flex;gap:30px;min-width:max-content;}
+
+    /* Soft skills — м’які картки */
+    .soft-card{background:var(--glass);backdrop-filter:blur(12px);padding:35px 30px;width:380px;flex-shrink:0;border-radius:20px;border:2px dashed var(--gold);text-align:center;font-style:italic;font-size:1.15rem;line-height:1.7;transition:.4s;box-shadow:var(--shadow);}
+    .soft-card:hover{border-style:solid;transform:translateY(-10px);box-shadow:0 20px 50px rgba(212,175,55,0.35);}
+
+    /* Tech skills */
+    .tech-card{background:var(--glass);backdrop-filter:blur(12px);padding:30px;width:340px;flex-shrink:0;border-radius:20px;border-left:6px solid var(--gold);text-align:center;transition:.4s;box-shadow:var(--shadow);}
+    .tech-card:hover{transform:translateY(-10px);box-shadow:0 20px 50px rgba(212,175,55,0.35);}
+    .tech-card i{font-size:3rem;color:var(--gold);margin-bottom:15px;}
+
+		/* === PROJECT CARDS  === */
+		.project-card2 {
+			width: 340px;
+			height: 480px;
+			position: relative;
+			margin: 20px;
+			border-radius: 20px;
+			overflow: hidden;
+			cursor: pointer;
+			box-shadow: 0 15px 50px rgba(0,0,0,0.5);
+			background: #170202;
+			transition: all 0.4s ease;
+		}
+
+		/* Золота смужка зліва */
+		.project-card2::before {
+			content: '';
+			position: absolute;
+			left: 0;
+			top: 14%;
+			bottom: 14%;
+			width: 2px;
+			background: linear-gradient(to bottom, #d4af37 0%, #ffd700 50%, #d4af37 100%);
+			border-radius: 3px;
+			box-shadow: 0 0 25px rgba(212,175,55,0.8);
+			z-index: 10;
+		}
+
+		.project-card2 > *:not(.front):not(.back)::before,
+		.project-card2 > *:not(.front):not(.back)::after { display: none !important; }
+
+		/* Лицева сторона */
+		.project-card2 .front {
+			position: absolute;
+			inset: 0;
+			z-index: 2;
+			opacity: 1;
+			transform: translateY(0);
+			transition: all 0.6s ease;
+		}
+		.project-card2 .front img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.75); }
+
+		/* Зворотна сторона */
+		.project-card2 .back {
+			position: absolute;
+			inset: 0;
+			background: #0a0505;
+			color: #f0f0f0;
+			padding: 36px 28px;
+			line-height: 1.7;
+			font-size: 0.98rem;
+			opacity: 0;
+			transform: translateY(30px);
+			transition: all 0.6s ease;
+			z-index: 1;
+		}
+		.project-card2 .back strong { color: #d4af37; font-size: 1.1rem; }
+
+		/* Анімація */
+		.project-card2.flipped .front { opacity: 0; transform: translateY(-30px); }
+		.project-card2.flipped .back { opacity: 1; transform: translateY(0); }
+
+		/* Підказка "натисни, щоб повернутися" */
+		.project-card2 .back-hint {
+			position: absolute;
+			bottom: 20px; left: 50%;
+			transform: translateX(-50%);
+			font-size: 0.8rem;
+			opacity: 0.6;
+			color: #d4af37;
+		}
+
+		/* Фото проєкту — 85% по ширині, по центру, округлі кути зверху */
+		.project-img {
+			height: 66%;
+			padding: 20px 7.5% 0;  /* відступи зліва/справа по 7.5% → фото 85% */
+			overflow: hidden;
+		}
+
+		.project-img img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			border-radius: 18px;
+			box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+			transition: transform 0.5s ease;
+		}
+
+		/* При наведенні — фото виростає вгору і НЕ лізе на back */
+		.project-card2:hover .project-img img {
+			transform: scale(1.06) translateY(-14px);
+		}
+
+		@keyframes bounce {
+			0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+			40% { transform: translateY(-20px); }
+			60% { transform: translateY(-10px); }
+		}
+
+    .contacts{background:var(--dark);padding:100px 20px 60px;text-align:center;}
+    .socials a{color:var(--gold);font-size:2.8rem;margin:0 28px;transition:.3s;}
+    .socials a:hover{transform:scale(1.3);color:var(--gold-light);}
+
+    .ua{display:block}.es,.en{display:none}
+    body.show-es .es{display:block}body.show-es .ua,body.show-es .en{display:none}
+    body.show-en .en{display:block}body.show-en .ua,body.show-en .es{display:none}
+
+    @media(max-width:768px){
+      .carousel-arrow{display:none !important;}
+      .logo{font-size:3rem;}
+      .tagline{font-size:1.1rem;}
+    }
+  </style>
+</head>
+<body class="show-ua" data-theme="dark">
+
+	<!-- Маленький елегантний лічильник мілонг — як у твоєму PDF -->
+	<div id="milonga-live">
+		<span class="ua">Сьогодні у Буенос-Айресі є мілонг: </span>
+		<span class="es">Hoy hay </span>
+		<span class="en">Today, </span>
+
+		<a href="https://www.hoy-milonga.com/buenos-aires/es/milongas" target="_blank" class="milonga-link">
+			<strong class="big" id="milongas-counter">⏳</strong>
+  	</a>
+
+		<span class="es">milongas en Buenos Aires.</span>
+		<span class="en">milongas are in Buenos Aires.</span>
+	</div>
+
+  <div class="controls">
+    <button onclick="setLang('ua')" class="active">УКР</button>
+    <button onclick="setLang('es')">ES</button>
+    <button onclick="setLang('en')">EN</button>
+<!--    <button onclick="toggleTheme()" title="Тема"><i class="fas fa-moon"></i></button>-->
+  </div>
+
+  <header>
+    <h1 class="logo">MyTangoCoding</h1>
+		<p class="tagline ua">В танго найвище мистецтво — <br> зробити складне простим і красивим.<br>В коді — те саме.<br>Python — мій другий танець.</p>
+		<p class="tagline es">En el tango el arte supremo es <br>hacer lo complejo simple y bello.<br>En el código, lo mismo.<br>Python es mi segundo baile.</p>
+		<p class="tagline en">In tango, the highest art is making<br> the complex simple and beautiful.<br>In code — the same.<br>Python is my second dance.</p>
+
+		<!-- Кнопка, яка відкриває форму -->
+		<div class="btn" onclick="document.getElementById('contact-modal').style.display='flex'">
+			<span class="ua">Запрошуй на співбесіду </span>
+			<span class="es">Invítame a una entrevista </span>
+			<span class="en">Invite me to interview </span>
+		</div>
+
+		<!-- Модальне вікно -->
+		<div id="contact-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.94); justify-content:center; align-items:center; z-index:999; backdrop-filter:blur(10px);">
+			<div style="background:var(--glass); padding:40px 50px; border-radius:20px; max-width:500px; width:90%; border:3px solid var(--gold); box-shadow:0 20px 60px rgba(212,175,55,0.3);">
+
+				<span onclick="document.getElementById('contact-modal').style.display='none'"
+							style="position:absolute; top:14px; right:24px; font-size:2.8rem; cursor:pointer; color:var(--gold); font-weight:300;">×</span>
+
+				<h2 style="text-align:center; margin:0 0 32px; color:var(--gold-light); font-size:1.8rem;">
+					<span class="ua">Залиште повідомлення</span>
+					<span class="es">Déjame un mensaje</span>
+					<span class="en">Drop me a message</span>
+				</h2>
+
+				<form id="contact-form" style="display:flex; flex-direction:column; gap:18px;">
+
+					<input type="text" name="name" placeholder="Ім’я / Nombre / Name" required>
+					<input type="email" name="email" placeholder="Email" required>
+					<input type="text" name="company" placeholder="Компанія / Empresa / Company (optional)">
+
+					<!-- Просто текстові поля — як у PDF -->
+					<input type="text" name="location" placeholder="Країна, місто / Pais, ciudad / Country, city" required>
+
+					<!-- БАЖАНА ДАТА І ЧАС ДЗВІНКА-->
+      		<input type="datetime-local"
+             name="preferred_time"
+             required
+             style="padding:16px; border-radius:12px; border:none; background:#222; color:var(--light); font-size:1rem;"
+             title="Оберіть бажану дату і час дзвінка (за вашим часовим поясом)">
+
+					<textarea name="message" rows="4" placeholder="Повідомлення… / Mensaje… / Message… " required
+										style="padding:16px; border-radius:12px; border:none; background:#222; color:var(--light); font-size:1rem; font-family:inherit; resize:vertical;"></textarea>
+
+					<button type="submit" style="background:linear-gradient(45deg,var(--gold),var(--gold-light)); color:#000; padding:16px; border:none; border-radius:50px; font-weight:bold; font-size:1.2rem; cursor:pointer; margin-top:10px;">
+						<span class="ua">Відправити</span>
+						<span class="es">Enviar</span>
+						<span class="en">Send</span>
+					</button>
+				</form>
+
+				<div id="form-status" style="margin-top:20px; text-align:center; color:var(--gold); font-weight:600;"></div>
+			</div>
+		</div>
+  </header>
+
+  <div class="container">
+    <div id="tango-code-today">
+			<h2>
+				<span class="tagline ua">Мій танго - код на сьогодні</span>
+				<span class="tagline es">Mi código de tango para hoy</span>
+				<span class="tagline en">My tango - code for today</span>
+			</h2>
+      <div class="quote ua">Завантажую ритм танго…</div>
+      <div class="quote es">Cargando el ritmo del tango…</div>
+      <div class="quote en">Loading the tango rhythm…</div>
+      <pre><code>Loading Python code…</code></pre>
+      <div class="comment ua"></div>
+      <div class="comment es"></div>
+      <div class="comment en"></div>
+    </div>
+
+		<!-- === блок "Яка я насправді" === -->
+		<h2 style="text-align:center;margin:140px 0 70px;color:var(--gold);font-size:2.4rem;">
+			<span class="ua">Яка я насправді</span>
+			<span class="es">Lo que realmente soy</span>
+			<span class="en">What I really am</span>
+		</h2>
+
+		<div class="carousel about-carousel">
+			<div class="carousel-arrow left" onclick="scrollC('about', -380)">‹</div>
+			<div class="carousel-arrow right" onclick="scrollC('about', 380)">›</div>
+			<div class="carousel-wrapper" id="about">
+				<div class="carousel-content" style="gap:24px;padding:0 20px;">
+
+					<!-- Фото 1 -->
+					<div class="about-item">
+						<div class="unified-card photo-card">
+							<img src="images/100.png" alt="foto1">
+						</div>
+					</div>
+
+					<!-- 2 soft-картки -->
+					<div class="about-item">
+						<div class="unified-card soft-card conclusion-card">
+
+							<!-- Цифри + основний текст -->
+							<div class="conclusion-main">
+								<strong class="years">47 - 51 - 54</strong>
+
+								<span class="ua">
+									переїхала до іншої країни,<br>
+									вийшла заміж,<br>
+									розлучилась<br>
+									<strong>і пішла в IT</strong>
+								</span>
+
+								<span class="es">
+									me mudé a otro país,<br>
+									me casé,<br>
+									me divorcié<br>
+									<strong>y me fui a IT</strong>
+								</span>
+
+								<span class="en">
+									moved to another country,<br>
+									got married,<br>
+									divorced<br>
+									<strong>and went into IT</strong>
+								</span>
+							</div>
+
+							<!-- Золота риска + підсумок -->
+							<div class="conclusion-footer">
+								<hr class="gold-line">
+								<p class="conclusion-text">
+									<span class="ua">Tож я не боюся приймати складні рішення</span>
+									<span class="es">Así que no tengo miedo de tomar decisiones difíciles</span>
+									<span class="en">So I'm not afraid to make difficult decisions</span>
+								</p>
+							</div>
+
+						</div>
+					</div>
+<!--  -----------------------------------           -->
+					<div class="about-item">
+						<div class="unified-card soft-card conclusion-card">
+
+							<div class="conclusion-main">
+								<span class="ua">
+									Чи можна мене назвати цілеспрямованою?<br>
+									Так — <strong>я йду до мети</strong> спокійно і методично.<br>
+									Але амбітною — ні.<br>
+									Бо мене захоплює саме шлях.
+								</span>
+								<span class="es">
+									¿Soy una persona con determinación?<br>
+									Sí — <strong>avanzo hacia la meta</strong> con calma y método.<br>
+									¿Ambiciosa? No.<br>
+									Porque me apasiona el camino.
+								</span>
+								<span class="en">
+									Am I goal-oriented?<br>
+									Yes — <strong>I move toward goals</strong> calmly and methodically.<br>
+									Ambitious? No.<br>
+									Because the journey excites me.
+								</span>
+							</div>
+
+							<!-- Золота риска + підсумок -->
+							<div class="conclusion-footer">
+								<hr class="gold-line">
+								<p class="conclusion-text">
+									<span class="ua">Вважаю шлях ціннішим за мету.<br>Бо саме він — і є життя!</span>
+									<span class="es">Valoro más el camino que la meta.<br>¡Porque el camino es la vida misma!</span>
+									<span class="en">I value the journey more than the goal. Because that’s what life is!</span>
+								</p>
+							</div>
+
+						</div>
+					</div>
+
+					<!-- Фото 2 -->
+					<div class="about-item">
+						<div class="unified-card photo-card">
+							<img src="images/101.png" alt="foto2">
+						</div>
+					</div>
+
+					<!-- 2 soft-картки -->
+					<div class="about-item">
+						<div class="unified-card soft-card conclusion-card">
+
+							<div class="conclusion-main">
+								<span class="ua">
+									Коли немає роботи — <br>я <strong>вчу нове</strong>.<br>
+									Мені треба завжди бути у процесі.<br>
+									Інакше я почуваюся некомфортно.
+								</span>
+
+								<span class="es">
+									Cuando no hay trabajo — <strong>aprendo algo nuevo</strong>.<br>
+									Necesito estar siempre en proceso.<br>
+									Si no, me siento incómoda.
+								</span>
+
+								<span class="en">
+									When there’s no work — I <strong>learn something new</strong>.<br>
+									I need to be in the process all the time.<br>
+									Otherwise I feel uncomfortable.
+								</span>
+							</div>
+
+							<div class="conclusion-footer">
+								<hr class="gold-line">
+								<p class="conclusion-text">
+									<span class="ua">За останній час я вивчила 4 нові мови: іспанську, танго-мову тіла, англійську та Python.</span>
+									<span class="es">En el último tiempo aprendí 4 idiomas nuevos: español, lenguaje corporal del tango, inglés y Python.</span>
+									<span class="en">In recent years I’ve learned three new languages: Spanish, tango body language, English, and Python.</span>
+								</p>
+							</div>
+
+						</div>
+					</div>
+<!--					---------------------              -->
+					<div class="about-item">
+						<div class="unified-card soft-card conclusion-card">
+
+							<div class="conclusion-main">
+								<span class="ua">
+									Я відчуваю людей і дуже уважно ставлюся до їхніх проблем.<br>
+									Інколи мене саму дивує, як <strong>я можу зрозуміти</strong> когось,<br>
+									відчути настрій без слів.
+								</span>
+
+								<span class="es">
+									Siento a las personas y presto mucha atención a sus problemas.<br>
+									A veces me sorprendo a mí misma de <strong>cómo puedo entender</strong> a alguien,
+									sentir su estado de ánimo sin palabras.
+								</span>
+
+								<span class="en">
+									I sense people and pay close attention to their problems.<br>
+									Sometimes I’m surprised myself how <strong>I can understand</strong> someone,<br>
+									feel their mood without words.
+								</span>
+							</div>
+
+							<div class="conclusion-footer">
+								<hr class="gold-line">
+								<p class="conclusion-text">
+									<span class="ua">17 років працювала з одним керівником: спільний шлях, досягнення, проблеми і їх рішення.</span>
+									<span class="es">Trabajé 17 años con el mismo jefe: camino compartido, logros, problemas y soluciones juntos.</span>
+									<span class="en">I worked 17 years with the same boss: shared path, achievements, problems, and solutions together.</span>
+								</p>
+							</div>
+
+						</div>
+					</div>
+
+					<!-- Фото 3 -->
+					<div class="about-item">
+						<div class="unified-card photo-card">
+							<img src="images/102.png" alt="foto3">
+						</div>
+					</div>
+
+<!--					---------------------              -->
+					<div class="about-item">
+						<div class="unified-card soft-card conclusion-card">
+
+							<div class="conclusion-main">
+								<span class="ua">
+									<strong>Емпатія. Ініціатива. Відповідальність</strong> — це про мене.
+									Побачила задачу — одразу берусь за неї,
+									відчуваю команду — і беру повну відповідальність.
+								</span>
+
+								<span class="es">
+									<strong>Empatía. Iniciativa. Responsabilidad</strong> — eso soy yo.<br>
+									Veo una tarea — me lanzo de inmediato,
+									siento al equipo — y asumo toda la responsabilidad.
+								</span>
+
+								<span class="en">
+									<strong>Empathy. Initiative. Responsibility</strong> — that’s me.<br>
+									I see a task — I dive in right away,
+									I feel the team — and I take full ownership.
+								</span>
+							</div>
+
+							<div class="conclusion-footer">
+								<hr class="gold-line">
+								<p class="conclusion-text">
+									<span class="ua">Мій перший командний проєкт —<br>і одразу техлід + Scrum Master.<br>Ведення розробки й взаємна підтримка.</span>
+									<span class="es">Mi primer proyecto en equipo —<br>y de una vez tech lead + Scrum Master.<br>Liderazgo técnico y apoyo mutuo.</span>
+									<span class="en">My very first team project —<br>and I immediately became tech lead + Scrum Master.<br>Technical leadership and mutual support.</span>
+								</p>
+							</div>
+
+						</div>
+					</div>
+
+					<!--  -----------------  -->
+					<div class="about-item">
+						<div class="unified-card soft-card conclusion-card">
+
+							<div class="conclusion-main">
+								<span class="ua">
+									Найбільший виклик для мене<br>
+									<strong>не зупинятися!</strong><br>
+									Але для мене це не просто слова — це мій спосіб життя.
+									Я вірю, що якщо тобі справді цікаво те, що ти робиш,
+									— ти знаходиш у цьому себе.<br>
+								</span>
+
+								<span class="lang es">
+									Mi mayor reto es <strong>nunca parar.</strong><br>
+									Para mí no son solo palabras — es mi vida.
+									Cuando algo te apasiona de verdad, te encuentras en ello.
+								</span>
+
+								<span class="lang en">
+									My biggest challenge is <br><strong>never to stop!</strong><br>
+									For me it’s not just words — it’s my life.
+									When you’re truly passionate, you find yourself in it.
+								</span>
+							</div>
+
+							<div class="conclusion-footer">
+								<hr class="gold-line">
+								<p class="conclusion-text">
+									<span class="ua">
+										Для мене найбільше досягнення — не втрачати допитливості.
+										Бо саме це рухає мене вперед.
+									</span>
+									<span class="lang en">
+										That’s why my greatest achievement is never losing curiosity —
+										it keeps pushing me forward.
+									</span>
+
+									<span class="lang es">
+										Por eso mi mayor logro es nunca perder la curiosidad:
+										ella me impulsa hacia adelante.
+									</span>
+								</p>
+							</div>
+
+						</div>
+					</div>
+
+					<!-- Фото 4 -->
+					<div class="about-item">
+						<div class="unified-card photo-card">
+							<img src="images/103.png" alt="foto4">
+						</div>
+					</div>
+
+					<!-- Останні 2 soft-картки — ти потім заміниш -->
+					<!--  -----------------  -->
+					<div class="about-item">
+						<div class="unified-card soft-card conclusion-card">
+
+							<div class="conclusion-main">
+								<span class="ua">
+									Танго дало мені три суперсили:<br>
+									<strong>слухати • довіряти • імпровізувати!</strong><br>
+									Ті самі три суперсили я приношу<br>
+									в кожну команду й кожен проєкт.
+								</span>
+
+								<span class="es">
+									El tango me dio tres superpoderes:<br>
+									<strong>escuchar • confiar • improvisar!</strong><br>
+									Esos mismos tres superpoderes<br>
+									los traigo a cada equipo y cada proyecto.
+								</span>
+
+								<span class="en">
+									Tango gave me three superpowers:<br>
+									<strong>listen • trust • improvise!</strong><br>
+									The same three superpowers<br>
+									I bring to every team and every project.
+								</span>
+							</div>
+
+							<div class="conclusion-footer">
+								<hr class="gold-line">
+								<p class="conclusion-text">
+									<span class="ua">
+										Тому я можу вести й слідувати одночасно —<br>
+										і в коді, і в команді, і в житті.
+									</span>
+									<span class="es">
+										Por eso puedo liderar y seguir al mismo tiempo —<br>
+										en el código, en el equipo y en la vida.
+									</span>
+									<span class="en">
+										That’s why I can lead and follow at the same time —<br>
+										in code, in the team, and in life.
+									</span>
+								</p>
+							</div>
+
+						</div>
+					</div>
+
+					<!-- ----------------- -->
+					<div class="about-item">
+						<div class="unified-card soft-card conclusion-card">
+
+							<div class="conclusion-main">
+
+								<span class="ua">
+									Танго можна <strong>вдосконалювати</strong> все життя.<br>
+									Так само — і <strong>себе</strong>.<br>
+									Головне знати, що заважає бути на всі 100%.
+								</span>
+
+								<span class="en">
+									You <strong>can perfect</strong> tango your <br>whole life.<br>
+									Same with <strong>yourself</strong><br>
+									The key is to know what holds you back from being 100%.
+								</span>
+
+								<span class="es">
+									El tango <strong>se puede perfeccionar</strong> toda la vida.<br>
+									Igual que a una <strong>misma</strong><br>
+									Lo importante es saber qué te impide estar al 100%.
+								</span>
+
+							</div>
+
+							<div class="conclusion-footer">
+								<hr class="gold-line">
+
+								<p class="conclusion-text">
+
+									<span class="ua">
+										Тому не «зависаю» — ділю велике на дрібні кроки.<br>
+										І не «згоряю» — вчусь вчасно відпочивати.
+									</span>
+
+									<span class="en">
+										That’s why I don’t freeze — I break big tasks into tiny steps.<br>
+										And I don’t burn out — I’m learning to rest on time.
+									</span>
+
+									<span class="es">
+										Por eso no me quedo «colgada» — divido lo grande en pasos pequeños.<br>
+										Y no me quemo — aprendo a descansar a tiempo.
+									</span>
+
+								</p>
+							</div>
+
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+<!--    <h2 style="text-align:center;margin:120px 0 60px;color:var(&#45;&#45;gold);">Танго з технологіями</h2>-->
+    <h2 style="text-align:center; margin:120px 0 60px; color:var(--gold);">
+			<span class="ua">Технології, з якими в мене вже є танда<sup>*</sup></span>
+			<span class="es">Tecnologías con las que ya tengo tanda<sup>*</sup></span>
+			<span class="en">Technologies I already have a tanda<sup>*</sup> with</span>
+		</h2>
+
+		<!-- Сноска маленькими буквами під заголовком -->
+		<p style="text-align:center; font-size:0.84rem; opacity:0.78; margin-top:-48px; margin-bottom:60px; line-height:1.7; max-width:860px; margin-left:auto; margin-right:auto;">
+			<span class="ua">* <strong>танда</strong> — серія з 3–4 танців з одним партнером на мілонзі.
+			Може бути з постійним, а може — з зовсім незнайомою людиною.
+			Тому що танго — це імпровізація і довіра з першого кроку.</span>
+
+			<span class="es">* <strong>tanda</strong> — serie de 3–4 bailes con la misma pareja en la milonga.
+			Puede ser con pareja habitual o con un completo desconocido.<br>
+			Porque el tango es improvisación y confianza desde el primer paso.</span>
+
+			<span class="en">* <strong>tanda</strong> — a set of 3–4 dances with one partner at a milonga.
+			Can be your regular partner or a complete stranger.<br>
+			Because tango is improvisation and trust from the very first step.</span>
+		</p>
+
+		<div class="carousel">
+      <div class="carousel-arrow left" onclick="scrollC('tech', -360)">‹</div>
+      <div class="carousel-arrow right" onclick="scrollC('tech', 360)">›</div>
+      <div class="carousel-wrapper" id="tech">
+        <div class="carousel-content">
+          <div class="tech-card"><i class="fab fa-python"></i><h3>Python</h3><p>OOP • Principles • Asyncio • Libraries</p></div>
+					<div class="tech-card"><img src="images/dj.png"><h3>Django</h3><p>WEB • DRF • ORM • Admin</p></div>
+					<div class="tech-card"><i class="fas fa-database"></i><h3>DataBase</h3><p>PostgreSQL • SQLite • MongoDB(basic)</p></div>
+          <div class="tech-card"><img src="images/fa.png"><h3>FastAPI</h3><p>Async • Pydantic • OpenAPI</p></div>
+          <div class="tech-card"><img src="images/dock.png"><h3>Docker</h3><p>Docker-compose • Images • Containers</p></div>
+          <div class="tech-card"><i class="fas fa-users"></i><h3>Jira</h3><p>Teamwork • Scrum • Agile • Team Lead</p></div>
+          <div class="tech-card"><i class="fas fa-check-circle"></i><h3>Testing</h3><p>AutoTests • Unittest • Pytest</p></div>
+					<div class="tech-card"><i class="fas fa-spider"></i><h3>Scrapy + Pandas</h3><p>Parsing • Scraping • Analysis</p></div>
+          <div class="tech-card"><i class="fas fa-heart"></i><h3>Code</h3><p>Clean • Clear • Scalable • Simple structure</p></div>
+        </div>
+      </div>
+    </div>
+
+<!--    <h2 style="text-align:center;margin:140px 0 60px;color:var(&#45;&#45;gold);">Мої проєкти</h2>-->
+		<h2 style="text-align:center; margin:140px 0 60px; color:var(--gold);">
+			<span class="ua">Результати моїх імпровізацій</span>
+			<span class="es">Resultados de mis improvisaciones</span>
+			<span class="en">Results of my improvisations</span>
+		</h2>
+
+		<div class="carousel">
+			<div class="carousel-arrow left" onclick="scrollC('proj', -420)">‹</div>
+			<div class="carousel-arrow right" onclick="scrollC('proj', 420)">›</div>
+			<div class="carousel-wrapper" id="proj">
+				<div class="carousel-content">
+
+<!--					MaxiClean Backend    -->
+					<div class="project-card2" onclick="this.classList.toggle('flipped')">
+						<div class="project-img">
+							<img src="images/mcw.png" alt="image">
+						</div>
+						<div class="front">
+							<div class="project-title" style="position:absolute; bottom:0; left:0; right:0; padding:24px; background:linear-gradient(transparent,rgba(0,0,0,0.8)); color:white;">
+								<h3 style="margin:0; color:#d4af37;">MaxiClean Web</h3>
+								<p style="margin:8px 0 0; opacity:0.9;">Teamwork · Backend Developer Role · Django RFW · Admin Panel in Ukrainian</p>
+							</div>
+						</div>
+
+						<div class="back">
+							<div class="lang en">
+									<strong>present..</strong><br>
+									Page of the local dry cleaner 'MaxiClean' in Kyiv.<br>
+									Implemented Backend for MaxiClean website<br>
+									<small><br>
+									Creating a DB structure.<br>
+									Implementation of API for full site operation.<br>
+									Setting up the administrative panel in Ukrainian to be able to maintain the website from it.
+									</small>
+							</div>
+
+							<div class="lang ua">
+									<strong>сьогодення..</strong><br>
+									Сайт місцевої хімчистки «MaxiClean» у Києві.<br>
+									Реалізовано Backend для сайту MaxiClean<br>
+									<small><br>
+									Створення структури бази даних.<br>
+									Реалізація API для повноцінної роботи сайту.<br>
+									Налаштування адміністративної панелі українською мовою для можливості ведення сайту з неї.
+									</small>
+							</div>
+
+							<div class="lang es">
+									<strong>presente..</strong><br>
+									Página web de la tintorería local 'MaxiClean' en Kyiv.<br>
+									Implementación del Backend para el sitio web de MaxiClean<br>
+									<small><br>
+									Creación de la estructura de la base de datos.<br>
+									Implementación de API para el funcionamiento completo del sitio.<br>
+									Configuración del panel administrativo en ucraniano para poder gestionar el sitio web desde él.
+									</small>
+							</div>
+
+							<div class="back-hint ua">← натисни, щоб повернутися</div>
+							<div class="back-hint en">← tap to go back</div>
+							<div class="back-hint es">← toca para volver</div>
+						</div>
+					</div>
+
+					<!--					HIXST project   -->
+					<div class="project-card2" onclick="this.classList.toggle('flipped')">
+						<div class="project-img">
+							<img src="images/hsh.png" alt="image">
+						</div>
+						<div class="front">
+							<div class="project-title" style="position:absolute; bottom:0; left:0; right:0; padding:24px; background:linear-gradient(transparent,rgba(0,0,0,0.8)); color:white;">
+								<h3 style="margin:0; color:#d4af37;">HIXST' Project</h3>
+								<p style="margin:8px 0 0; opacity:0.9;">FasAPI · Gateway API Pattern · Microservices · Asyncio · Docker · Logging</p>
+							</div>
+						</div>
+
+						<div class="back">
+							<div class="lang en">
+								<strong>Oct 30, 2025</strong><br>
+								Responsibilities:<br>
+								<small>
+								Designed and implemented architectural upgrades (Docker, Docker Compose).<br>
+								Applied Gateway API pattern, ensuring clean, clear, and simple API structure.<br>
+								Optimized performance by integrating an asynchronous DB engine for async API endpoints.<br>
+								Added a logging at all stages of the development process.
+								</small>
+							</div>
+
+							<div class="lang ua">
+								<strong>30 жовтня 2025</strong><br>
+								Обов’язки:<br>
+								<small>
+								Спроєктував та реалізував архітектурні покращення (Docker, Docker Compose).<br>
+								Застосував патерн Gateway API, забезпечивши чисту, зрозумілу та просту структуру API.<br>
+								Оптимізував продуктивність завдяки інтеграції асинхронного рушія бази даних для асинхронних ендпоінтів API.<br>
+								Додав логування на всіх етапах процесу розробки.
+								</small>
+							</div>
+
+							<div class="lang es">
+								<strong>30 oct 2025</strong><br>
+								Responsabilidades:<br>
+								<small>
+								Diseñé e implementé mejoras arquitectónicas (Docker, Docker Compose).<br>
+								Apliqué el patrón Gateway API, garantizando una estructura de API limpia, clara y sencilla.<br>
+								Optimización del rendimiento mediante la integración de un motor de base de datos asíncrono para endpoints API asíncronos.<br>
+								Agregué registro (logging) en todas las etapas del proceso de desarrollo.
+								</small>
+							</div>
+
+							<div class="back-hint ua">← натисни, щоб повернутися</div>
+							<div class="back-hint en">← tap to go back</div>
+							<div class="back-hint es">← toca para volver</div>
+						</div>
+					</div>
+
+					<!--         Dream Helper  -->
+					<div class="project-card2" onclick="this.classList.toggle('flipped')">
+						<div class="project-img">
+							<img src="images/dh.png" alt="image">
+						</div>
+						<div class="front">
+							<div class="project-title" style="position:absolute; bottom:0; left:0; right:0; padding:24px; background:linear-gradient(transparent,rgba(0,0,0,0.8)); color:white;">
+								<h3 style="margin:0; color:#d4af37;">Dream Helper</h3>
+								<p style="margin:8px 0 0; opacity:0.9;">Teamwork · Team Lead · Backend · Stripe Payment Service · MinIO · Mailhog · Docker</p>
+							</div>
+						</div>
+
+						<div class="back">
+							<div class="lang ua">
+								<strong>10 жовтня 2025</strong><br>
+								Перший проєкт у команді. <br><br>
+								роль: Backend, Team Lead, Scrum Master.<br><br>
+								Stripe-платежі, MinIO сховище, MailHog email сповіщення.<br>
+								JIRA, backlog, спринти, code review.<br>
+								Організувала команду та фронтенд-розробку.
+							</div>
+
+							<div class="lang en">
+								<strong>Oct 10, 2025</strong><br>
+								First project in a team.<br><br>
+								Role: Backend, Team Lead, Scrum Master.<br><br>
+								Stripe payments, MinIO storage, MailHog email notifications.<br>
+								JIRA, backlog, sprints, code review.<br>
+								Organized the team and frontend development.
+							</div>
+
+							<div class="lang es">
+								<strong>10 oct 2025</strong><br>
+								Primer proyecto en equipo.<br><br>
+								Rol: Backend, Team Lead, Scrum Master.<br><br>
+								Pagos con Stripe, almacenamiento MinIO, notificaciones por email con MailHog.<br>
+								JIRA, backlog, sprints, code review.<br>
+								Organicé el equipo y el desarrollo frontend.
+							</div>
+
+							<div class="back-hint ua">← натисни, щоб повернутися</div>
+							<div class="back-hint en">← tap to go back</div>
+							<div class="back-hint es">← toca para volver</div>
+						</div>
+					</div>
+
+					<!--        Work Scrape Analyze   -->
+					<div class="project-card2" onclick="this.classList.toggle('flipped')">
+						<div class="project-img">
+							<img src="images/wsa.png" alt="image">
+						</div>
+						<div class="front">
+							<div class="project-title" style="position:absolute; bottom:0; left:0; right:0; padding:24px; background:linear-gradient(transparent,rgba(0,0,0,0.8)); color:white;">
+								<h3 style="margin:0; color:#d4af37;">Work Scrape Analyze</h3>
+								<p style="margin:8px 0 0; opacity:0.9;">Scrapy Framework · Selenium · BeautifulSoup4 · Jupyter Notebook · Pandas · NumPy · Matplotlib</p>
+							</div>
+						</div>
+
+						<div class="back">
+							<div class="lang en">
+								<strong>Jul 29, 2025</strong><br>
+								Automated scraping and analysis of IT job vacancies from work.ua.<br><br>
+								1–3 keywords to focus the search.<br>
+								Two spiders, 4 types of skills: general, tech, soft skills and not classified.<br><br>
+								<small>Scraping job listings marked as IT-related.<br>
+								Extracting requirements from vacancy descriptions.<br>
+								Preparing data & analysis.
+								</small>
+							</div>
+
+							<div class="lang ua">
+								<strong>29 липня 2025</strong><br>
+								Автоматизований парсинг та аналіз ІТ-вакансій з work.ua.<br><br>
+								1–3 ключові слова для фокусування пошуку.<br>
+								Два спайдери, 4 типи навичок: загальні, технічні, софт-скіли та некласифіковані.<br><br>
+								<small>Парсинг вакансій, позначених як ІТ.<br>
+								Витягування вимог із описів вакансій.<br>
+								Підготовка даних та аналіз.
+								</small>
+							</div>
+
+							<div class="lang es">
+								<strong>29 jul 2025</strong><br>
+								Automatización del scraping y análisis de vacantes IT de work.ua.<br><br>
+								1–3 palabras clave para enfocar la búsqueda.<br>
+								Dos spiders, 4 tipos de habilidades: generales, técnicas, blandas y no clasificadas.<br><br>
+								<small>Scraping de ofertas marcadas como relacionadas con IT.<br>
+								Extracción de requisitos de las descripciones de las vacantes.<br>
+								Preparación de datos y análisis.
+								</small>
+							</div>
+
+							<div class="back-hint ua">← натисни, щоб повернутися</div>
+							<div class="back-hint en">← tap to go back</div>
+							<div class="back-hint es">← toca para volver</div>
+						</div>
+					</div>
+
+					<!--					Library Service API    -->
+					<div class="project-card2" onclick="this.classList.toggle('flipped')">
+						<div class="project-img">
+							<img src="images/lsa.png" alt="image">
+						</div>
+						<div class="front">
+							<div class="project-title" style="position:absolute; bottom:0; left:0; right:0; padding:24px; background:linear-gradient(transparent,rgba(0,0,0,0.8)); color:white;">
+								<h3 style="margin:0; color:#d4af37;">Library Service API</h3>
+								<p style="margin:8px 0 0; opacity:0.9;">Django RFW · JWT Authentication · Stripe Payments · Telegram API, Chat & Bot · Docker · Swagger</p>
+							</div>
+						</div>
+
+						<div class="back">
+							<div class="lang en">
+								<strong>Apr 5, 2025</strong><br>
+								The online management system for book borrowings.<br><br>
+								<small>
+								 Books Service: Managing of books.<br>
+								 Users Service: Authentication & registration.<br>
+								 Borrowings Service: Users' borrowings of books.<br>
+								 Notifications Service (Telegram): Celery uses for sending notifications.<br>
+								 Payments Service: Payments for borrowings through the platform.
+								</small>
+							</div>
+
+							<div class="lang ua">
+								<strong>5 квітня 2025</strong><br>
+								Онлайн-система керування видачею книг.<br><br>
+								<small>
+								 Books Service: Керування книгами.<br>
+								 Users Service: Автентифікація та реєстрація.<br>
+								 Borrowings Service: Видача книг користувачам.<br>
+								 Notifications Service (Telegram): Celery для надсилання сповіщень.<br>
+								 Payments Service: Оплата за видачу книг через платформу.
+								</small>
+							</div>
+
+							<div class="lang es">
+								<strong>5 abr 2025</strong><br>
+								Sistema online de gestión de préstamos de libros.<br><br>
+								<small>
+								 Books Service: Gestión de libros.<br>
+								 Users Service: Autenticación y registro.<br>
+								 Borrowings Service: Préstamos de libros a usuarios.<br>
+								 Notifications Service (Telegram): Celery para enviar notificaciones.<br>
+								 Payments Service: Pagos por préstamos a través de la plataforma.
+								</small>
+							</div>
+
+							<div class="back-hint ua">← натисни, щоб повернутися</div>
+							<div class="back-hint en">← tap to go back</div>
+							<div class="back-hint es">← toca para volver</div>
+						</div>
+					</div>
+
+					<!--					Online cinema    -->
+					<div class="project-card2" onclick="this.classList.toggle('flipped')">
+						<div class="project-img">
+							<img src="images/oc.png" alt="image">
+						</div>
+						<div class="front">
+							<div class="project-title" style="position:absolute; bottom:0; left:0; right:0; padding:24px; background:linear-gradient(transparent,rgba(0,0,0,0.8)); color:white;">
+								<h3 style="margin:0; color:#d4af37;">Online Cinema API</h3>
+								<p style="margin:8px 0 0; opacity:0.9;">FastAPI · JWT Authentication · Stripe Payments · Telegram API, Chat & Bot · Docker · Swagger</p>
+							</div>
+						</div>
+
+						<div class="back">
+							<div class="lang en">
+								<strong>Mar 19, 2025</strong><br>
+								An online cinema is a digital platform that allows users to select, watch,
+								and purchase access to movies via the internet.<br>
+								<small>
+								 Implemented services: <br>
+								 Movies: browse the movie catalog, like or dislike, write comments, filter,
+								 sort, search, rate, email notification about comments.<br>
+								 Shopping Cart, Orders, Payments.<br>
+								 Celery: delete expired tokens. Create some movies to DB: src.config.movies_to_db for testing.
+								</small>
+							</div>
+
+							<div class="lang ua">
+								<strong>19 березня 2025</strong><br>
+								Онлайн-кінотеатр — цифрова платформа, що дозволяє користувачам обирати, переглядати
+								та купувати доступ до фільмів через інтернет.<br>
+								<small>
+								 Реалізовані сервіси:<br>
+								 Movies: перегляд каталогу фільмів, лайки/дизлайки, коментарі, фільтри,
+								 сортування, пошук, оцінки, email-сповіщення про коментарі.<br>
+								 Кошик, Замовлення, Оплата.<br>
+								 Celery: видалення прострочених токенів.
+								</small>
+							</div>
+
+							<div class="lang es">
+								<strong>19 mar 2025</strong><br>
+								Un cine online es una plataforma digital que permite a los usuarios seleccionar, ver
+								y comprar acceso a películas a través de internet.<br>
+								<small>
+								 Servicios implementados:<br>
+								 Movies: navegación por el catálogo, me gusta/no me gusta, comentarios, filtros,
+								 ordenación, búsqueda, valoración, notificaciones por email sobre comentarios.<br>
+								 Carrito de compras, Pedidos, Pagos.<br>
+								 Celery: eliminación de tokens expirados.
+								</small>
+							</div>
+
+							<div class="back-hint ua">← натисни, щоб повернутися</div>
+							<div class="back-hint en">← tap to go back</div>
+							<div class="back-hint es">← toca para volver</div>
+						</div>
+					</div>
+
+					<!--					Social Media API    -->
+					<div class="project-card2" onclick="this.classList.toggle('flipped')">
+						<div class="project-img">
+							<img src="images/sma.png" alt="image">
+						</div>
+						<div class="front">
+							<div class="project-title" style="position:absolute; bottom:0; left:0; right:0; padding:24px; background:linear-gradient(transparent,rgba(0,0,0,0.8)); color:white;">
+								<h3 style="margin:0; color:#d4af37;">Social Media API</h3>
+								<p style="margin:8px 0 0; opacity:0.9;">Django RFW · Token Authentication · Schedule Celery · Docker · Swagger drf-spectacular</p>
+							</div>
+						</div>
+
+						<div class="back">
+							<div class="lang en">
+								<strong>Jan 16, 2025</strong><br>
+								User Profile Features:<br>
+								<small>
+								Users can create and update their profile, view profiles of other users,
+								 search for other users, can be follow/following, can create new posts
+								 with text content and media attachments, can retrieve posts by hashtags,
+								 title and content, can like and unlike posts, can add comments to posts and view comments.<br>
+								Users have possibility to schedule Post creation.<br>
+								The API documentation make with Swagger drf-spectacular.
+								</small>
+							</div>
+
+							<div class="lang ua">
+								<strong>16 січня 2025</strong><br>
+								Функціонал профілю користувача:<br>
+								<small>
+								Користувачі можуть створювати та оновлювати свій профіль, переглядати профілі інших,
+								шукати користувачів, підписуватись/бути підписаним, створювати нові пости
+								з текстом та медіа-вкладеннями, отримувати пости за хештегами,
+								заголовком та вмістом, лайкати/знімати лайк, додавати коментарі та переглядати їх.
+								Користувачі можуть планувати створення постів (відкладена публікація).
+								Документація Swagger.
+								</small>
+							</div>
+
+							<div class="lang es">
+								<strong>16 ene 2025</strong><br>
+								Funcionalidades del perfil de usuario:<br>
+								<small>
+								Los usuarios pueden crear y actualizar su perfil, ver perfiles de otros usuarios,
+								buscar usuarios, seguir/ser seguidos, crear nuevas publicaciones
+								con contenido de texto y archivos multimedia adjuntos, obtener publicaciones por hashtags,
+								título y contenido, dar/quitar like a publicaciones, añadir comentarios y verlos.<br>
+								Los usuarios pueden programar la creación de publicaciones.<br>
+								La documentación Swagger (drf-spectacular).
+								</small>
+							</div>
+
+							<div class="back-hint ua">← натисни, щоб повернутися</div>
+							<div class="back-hint en">← tap to go back</div>
+							<div class="back-hint es">← toca para volver</div>
+						</div>
+					</div>
+
+					<!--					Airport API    -->
+					<div class="project-card2" onclick="this.classList.toggle('flipped')">
+						<div class="project-img">
+							<img src="images/aa.png" alt="image">
+						</div>
+						<div class="front">
+							<div class="project-title" style="position:absolute; bottom:0; left:0; right:0; padding:24px; background:linear-gradient(transparent,rgba(0,0,0,0.8)); color:white;">
+								<h3 style="margin:0; color:#d4af37;">Airport - API</h3>
+								<p style="margin:8px 0 0; opacity:0.9;">Django RFW · JWT Authentication · Swagger · Django pagination & throttling · Docker</p>
+							</div>
+						</div>
+
+						<div class="back">
+							<div class="lang en">
+								<strong>Jan 7, 2025</strong><br>
+								Airport-api provides information about various flights,
+								airlines and airports around the world.
+								With the ability to arrange ticket booking for registered users.<br>
+								<small>Features:
+								Documentation: /api/doc/swagger/,
+								Creating: Country, City, AirportTimeZone, Airports with code IATA & closest city, Route,
+								AirplaneType, AirlineCompany, Facility & Airplane with facilities, Create Role & Crew with role,
+								Flight, Filter Flights,
+								Calculating the flight duration (for timezone)</small>
+							</div>
+
+							<div class="lang ua">
+								<strong>7 січня 2025</strong><br>
+								API надає інформацію про різні рейси,
+								авіакомпанії та аеропорти по всьому світу.
+								З можливістю бронювання квитків для користувачів.<br>
+								<small>Функціонал:
+								Створення: Country, City, AirportTimeZone, Аеропорти з кодом IATA та найближчим містом, Route,
+								AirplaneType, AirlineCompany, Facility & Літак з обладнанням, Роль та Екіпаж з роллю,
+								Flight, Фільтрація рейсів,
+								Розрахунок тривалості польоту з урахуванням часових поясів.</small>
+							</div>
+
+							<div class="lang es">
+								<strong>7 ene 2025</strong><br>
+								Airport-api proporciona información sobre vuelos,
+								aerolíneas y aeropuertos de todo el mundo.
+								Con posibilidad de reservar billetes para usuarios registrados.<br>
+								<small>Funcionalidades:
+								Documentación: /api/doc/swagger/,
+								Creación: Country, City, AirportTimeZone, Aeropuertos con código IATA y ciudad más cercana, Route,
+								AirplaneType, AirlineCompany, Facility & Avión con instalaciones, Rol y Tripulación con rol,
+								Flight, Filtrado de vuelos,
+								Cálculo de la duración del vuelo considerando zonas horarias</small>
+							</div>
+
+							<div class="back-hint ua">← натисни, щоб повернутися</div>
+							<div class="back-hint en">← tap to go back</div>
+							<div class="back-hint es">← toca para volver</div>
+						</div>
+					</div>
+
+<!--					Let's go Tango    -->
+					<div class="project-card2" onclick="this.classList.toggle('flipped')">
+						<div class="project-img">
+							<img src="images/lgt.png" alt="image">
+						</div>
+						<div class="front">
+							<div class="project-title" style="position:absolute; bottom:0; left:0; right:0; padding:24px; background:linear-gradient(transparent,rgba(0,0,0,0.8)); color:white;">
+								<h3 style="margin:0; color:#d4af37;">Let's Go Tango</h3>
+								<p style="margin:8px 0 0; opacity:0.9;">Django Web Development · Django RFW · PostgreSQL · Deployed to Render</p>
+							</div>
+						</div>
+
+						<div class="back">
+							<div class="lang en">
+								<strong>Nov 25, 2024</strong><br>
+								Tango Community: Connect, share your tango-activities and contribute.<br>
+								Pet project / Project from the heart.<br>
+								<small><br>
+								If you dance Tango or are just learning to dance, you can become a user of this website,
+								 and you can be one of the members of the Tango community.
+								 You will have access to information about other members,
+								 all kinds of Tango activities and places where Tango events are held.</small>
+							</div>
+
+							<div class="lang ua">
+								<strong>25 листопада 2024</strong><br>
+								Tango Community: Спілкуйся, ділись своїми танго-подіями та долучайся.<br>
+								Проєкт для душі.<br>
+								<small><br>
+								Якщо ти танцюєш танго або тільки навчаєшся — ти можеш стати користувачем цього сайту
+								 і частиною танго-спільноти.
+								 Ти матимеш доступ до інформації про інших учасників,
+								 всіляких танго-подій та місць, де вони відбуваються.</small>
+							</div>
+
+							<div class="lang es">
+								<strong>25 nov 2024</strong><br>
+								Tango Community: Conecta, comparte tus actividades de tango y contribuye.<br>
+								Proyecto del corazón.<br>
+								<small><br>
+								Si bailas tango o estás aprendiendo, puedes convertirte en usuario de esta web
+								 y formar parte de la comunidad tanguera.
+								 Tendrás acceso a información sobre otros miembros,
+								 todo tipo de actividades de tango y los lugares donde se realizan.</small>
+							</div>
+
+							<div class="back-hint ua">← натисни, щоб повернутися</div>
+							<div class="back-hint en">← tap to go back</div>
+							<div class="back-hint es">← toca para volver</div>
+						</div>
+					</div>
+
+
+				</div>
+			</div>
+		</div>
+
+  </div>
+
+  <div class="contacts">
+		<div>
+			<!-- Заголовок у 3-х мовах -->
+			<h2 class="lang ua">Чекаю на твоє кабесео<sup>*</sup> отут</h2>
+			<h2 class="lang en">Waiting for your cabeceo<sup>*</sup> right here</h2>
+			<h2 class="lang es">Espero tu cabeceo<sup>*</sup> justo aquí</h2>
+			<!-- Пояснення про кабесео (теж 3 мови) -->
+			<p class="footnote" style="text-align:center; font-size:0.84rem; opacity:0.78; margin-top:-2px; margin-bottom:5px; line-height:1.7; max-width:860px; margin-left:auto; margin-right:auto;">
+				<span class="ua"><strong>*кабесео</strong> — традиційне танго-запрошення до танцю <strong>поглядом</strong>.</span>
+				<span class="en"><strong>*cabeceo</strong> — the traditional tango invitation to dance with <strong>a glance</strong>.</span>
+				<span class="es"><strong>*cabeceo</strong> — la invitación tradicional del tango con <strong>la mirada</strong>.</span>
+			</p>
+
+			<!-- Золота стрілочка, що підстрибує -->
+			<p style="font-size: 70px; margin: 5px 0; color: #d49e37; animation: bounce 2s infinite;">
+				↓
+			</p>
+
+		</div>
+
+    <div class="socials" style="margin:50px 0">
+      <a href="mailto:zazmargo@gmail.com"><i class="fas fa-envelope"></i></a>
+      <a href="https://t.me/ZazMarga"><i class="fab fa-telegram"></i></a>
+      <a href="https://www.linkedin.com/in/marharyta-zazulia-708825358/"><i class="fab fa-linkedin"></i></a>
+      <a href="https://github.com/zazmarga/"><i class="fab fa-github"></i></a>
+      <a href="https://lets-go-tango.onrender.com"><i class="fas fa-heart"></i></a>
+    </div>
+		<p><span class="es en">+54 9 11 3302-9239 • Buenos Aires • 2025</span></p>
+  </div>
+
+	<script>
+
+		const BACKEND = "http://127.0.0.1:8000";          // на локалі
+		// const BACKEND = "https://zazmarga.xyz";   // на проді
+
+		async function updateMilongasNow() {
+				try {
+						const resp = await fetch(BACKEND + "/api/milongas");
+
+						// Якщо сервер віддає не 200
+						if (!resp.ok) {
+								showMilongasError(`Помилка ${resp.status}`);
+								return;
+						}
+
+						const data = await resp.json();
+
+						// Оновлюємо цифру і текст
+						const counterEl = document.getElementById("milongas-counter");
+
+						if (counterEl) counterEl.textContent = data.milongas_now ?? 0;
+
+
+				} catch (err) {
+						console.error("Не вдалось завантажити /api/milongas", err);
+						showMilongasError("Нема зв’язку з танго-сервером");
+				}
+		}
+
+		function showMilongasError(text = "Танго сьогодні мовчить") {
+				const counterEl = document.getElementById("milongas-counter");
+				const messageEl = document.getElementById("milongas-message");
+				if (counterEl) counterEl.textContent = "?";
+				if (messageEl) messageEl.textContent = text;
+		}
+
+		// Завантажуємо одразу і кожні 30 хвилин
+		updateMilongasNow();
+		setInterval(updateMilongasNow, 1800000);
+	</script>
+	<script>
+    function setLang(l){ document.body.className="show-"+l; document.querySelectorAll('.controls button').forEach(b=>b.classList.remove('active')); document.querySelector(`[onclick="setLang('${l}')"]`).classList.add('active'); loadTangoCode(); }
+
+    function scrollC(id, px){ document.getElementById(id).scrollLeft += px; }
+
+  </script>
+
+	<script>
+		// Відкриття/закриття модалки
+		document.querySelector('.btn').addEventListener('click', function(e) {
+			e.preventDefault();
+			document.getElementById('contact-modal').style.display = 'flex';
+		});
+
+		document.getElementById('contact-modal').addEventListener('click', function(e) {
+			if (e.target === this || e.target.innerText === '×') {
+				this.style.display = 'none';
+			}
+		});
+
+		// Відправка форми на API
+		document.getElementById('contact-form').addEventListener('submit', async function(e) {
+			e.preventDefault();
+
+			const formData = new FormData(this);
+			const statusDiv = document.getElementById('form-status');
+
+			// Перетворюємо FormData в об’єкт
+			const data = {};
+			for (let [key, value] of formData.entries()) {
+				data[key] = value;
+			}
+
+			// Додаємо правильний формат дати (якщо людина написала текстом)
+			if (data.preferred_time && !data.preferred_time.includes('T')) {
+				// Якщо це просто текст типу "вівторок 14:00", залишаємо як є
+				// FastAPI отримає його як str, і ти побачиш саме те, що написала людина
+			}
+
+			try {
+				statusDiv.textContent = 'Відправляємо…';
+				statusDiv.style.color = 'var(--gold-light)';
+
+				const response = await fetch(BACKEND + "/api/send-message", {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(data)
+				});
+
+				let result;
+				try {
+					result = await response.json();
+				} catch {
+					statusDiv.innerHTML = 'Помилка сервера. Спробуйте пізніше або напишіть на zazmargo@gmail.com';
+					statusDiv.style.color = '#ff6b6b';
+					return;
+				}
+
+				if (result.status === 'ok') {
+					statusDiv.innerHTML = 'Лист успішно відправлено! Дякую! <br>Я зв’яжуся з вами найближчим часом.';
+					statusDiv.style.color = 'var(--gold)';
+					this.reset();
+				} else {
+					statusDiv.textContent = 'Помилка: ' + result.message;
+					statusDiv.style.color = '#ff6b6b';
+				}
+			} catch (err) {
+				statusDiv.textContent = 'Не вдалося підключитися до сервера. Напишіть мені на zazmargo@gmail.com';
+				statusDiv.style.color = '#ff6b6b';
+			}
+		});
+	</script>
+
+	<script>
+	async function loadDailyTango() {
+		try {
+			const resp = await fetch(BACKEND + "/api/random_quote"); //
+			const data = await resp.json();
+
+			// Заповнюємо цитати
+			document.querySelector(".quote.ua").textContent = data.quote_ua || "…";
+			document.querySelector(".quote.es").textContent = data.quote_es || "…";
+			document.querySelector(".quote.en").textContent = data.quote_en || "…";
+
+			// Код (зберігаємо відступи і переноси)
+			const codeBlock = document.querySelector("#tango-code-today pre code");
+			codeBlock.textContent = data.code || "# Tанго сьогодні відпочиває";
+
+			// Коментар
+			document.querySelector(".comment.ua").textContent = data.comment_ua || "";
+			document.querySelector(".comment.es").textContent = data.comment_es || "";
+			document.querySelector(".comment.en").textContent = data.comment_en || "";
+
+
+		} catch (err) {
+			console.log("Loading Error:", err);
+			document.querySelectorAll(".quote").forEach(el => el.textContent = "Танго сьогодні відпочиває...");
+		}
+	}
+
+	// Завантажуємо одразу при відкритті сторінки
+	document.addEventListener("DOMContentLoaded", loadDailyTango);
+	</script>
+
+</body>
+</html>
+

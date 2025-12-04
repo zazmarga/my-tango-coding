@@ -1,0 +1,8 @@
+fastapi
+sqlalchemy
+uvicorn[standard]
+httpx
+pydantic
+resend
+python-multipart
+bs4
