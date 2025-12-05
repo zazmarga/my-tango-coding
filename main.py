@@ -32,6 +32,13 @@ if not SECRET_API_KEY:
 # ====================== FastAPI ======================
 app = FastAPI(title="ZazMarga.xyz Tango API", version="1.0")
 
+
+# Health без обмежень
+@app.get("/health", include_in_schema=False)
+async def health():
+    return {"status": "ok"}
+
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["https://zazmarga.xyz", "http://localhost:3000", "http://localhost:63342"],  # тільки твій сайт
@@ -130,11 +137,6 @@ def read_index():
     return FileResponse("index.html")
 
 # ====================== Ендпоінти ======================
-@app.get("/health")
-async def health():
-    return {"status": "ok"}
-
-
 @app.get("/api/milongas")
 async def get_milongas():
     count = await get_milongas_running_right_now()
