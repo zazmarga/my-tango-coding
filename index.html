@@ -86,10 +86,12 @@
 			display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92);
 			justify-content:center; align-items:center; z-index:999; backdrop-filter:blur(8px);
 		}
+
 		.modal-content{
 			background:var(--glass); padding:40px; border-radius:20px; max-width:520px; width:90%;
 			position:relative; border:3px solid var(--gold); box-shadow:0 20px 60px rgba(212,175,55,0.3);
 		}
+
 		.modal-close{
 			position:absolute; top:12px; right:20px; font-size:3rem; cursor:pointer;
 			color:var(--gold); font-weight:300; transition:.3s;
@@ -97,10 +99,11 @@
 		.modal-close:hover{transform:scale(1.2); opacity:0.8;}
 		.modal-title{text-align:center; margin:0 0 30px; color:var(--gold-light);}
 
-		#contact-form input, #contact-form textarea, #contact-form select{
+		#contact-form input, #contact-form textarea, #contact-form select {
 			width:100%; padding:14px; margin:12px 0; border-radius:12px; border:none;
 			background:#222; color:var(--light); font-size:1rem; font-family:inherit;
 		}
+
 		#contact-form input:focus, #contact-form textarea:focus, #contact-form select:focus{
 			outline:2px solid var(--gold); background:#2a2a2a;
 		}
@@ -119,8 +122,8 @@
 		#contact-form input,
 		#contact-form textarea {
 			width: 100%;
-			padding: 14px 14px 14px 16px;
-			margin: 13px 0;
+			padding: 8px 8px 8px 10px;
+			margin: 8px 0;
 			border-radius: 12px;
 			border: none;
 			background: #222;
@@ -476,7 +479,7 @@
 
 		<!-- Модальне вікно -->
 		<div id="contact-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.94); justify-content:center; align-items:center; z-index:999; backdrop-filter:blur(10px);">
-			<div style="background:var(--glass); padding:40px 50px; border-radius:20px; max-width:500px; width:90%; border:3px solid var(--gold); box-shadow:0 20px 60px rgba(212,175,55,0.3);">
+			<div style="background:var(--glass); padding:10px 20px; border-radius:20px; max-width:500px; width:90%; border:3px solid var(--gold); box-shadow:0 20px 60px rgba(212,175,55,0.3);">
 
 				<span onclick="document.getElementById('contact-modal').style.display='none'"
 							style="position:absolute; top:14px; right:24px; font-size:2.8rem; cursor:pointer; color:var(--gold); font-weight:300;">×</span>
@@ -487,7 +490,7 @@
 					<span class="en">Drop me a message</span>
 				</h2>
 
-				<form id="contact-form" style="display:flex; flex-direction:column; gap:18px;">
+				<form id="contact-form" style="display:flex; flex-direction:column; gap:10px;">
 
 					<input type="text" name="name" placeholder="Ім’я / Nombre / Name" required>
 					<input type="email" name="email" placeholder="Email" required>
