@@ -1570,10 +1570,10 @@
 				statusDiv.textContent = 'Відправляємо…';
 				statusDiv.style.color = 'var(--gold-light)';
 
+				const formData = new FormData(this);
 				const response = await fetch(BACKEND + "/api/send-message", {
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify(data)
+						method: 'POST',
+						body: formData
 				});
 
 				let result;
