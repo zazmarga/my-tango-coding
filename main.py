@@ -130,6 +130,11 @@ def read_index():
     return FileResponse("index.html")
 
 # ====================== Ендпоінти ======================
+@app.get("/health")
+async def health():
+    return {"status": "ok"}
+
+
 @app.get("/api/milongas")
 async def get_milongas():
     count = await get_milongas_running_right_now()
