@@ -35,6 +35,7 @@ app = FastAPI(title="ZazMarga.xyz Tango API", version="1.0")
 
 # Health без обмежень
 @app.get("/health", include_in_schema=False)
+@app.head("/health", include_in_schema=False)
 async def health():
     return {"status": "ok"}
 
