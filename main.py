@@ -3,9 +3,9 @@ import httpx, json
 from typing import Optional
 from datetime import datetime, timedelta, timezone
 
-from fastapi import FastAPI, Depends, HTTPException, Form
+from fastapi import FastAPI, Depends, HTTPException, Form, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
 from bs4 import BeautifulSoup
@@ -30,7 +30,7 @@ if not SECRET_API_KEY:
 
 
 # ====================== FastAPI ======================
-app = FastAPI(title="ZazMarga.xyz Tango API", version="1.0")
+app = FastAPI(title="ZazMarga.pp.ua Tango API", version="1.0")
 
 
 # Health без обмежень
@@ -42,11 +42,26 @@ async def health():
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://zazmarga.xyz", "http://localhost:3000", "http://localhost:63342"],  # тільки твій сайт
+    allow_origins=["https://zazmarga.pp.ua", "https://zazmarga.xyz", "http://localhost:3000", "http://localhost:63342"],  # тільки твій сайт
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+# ====================== Редирект зі старого домену ======================
+OLD_DOMAINS = {"zazmarga.xyz", "www.zazmarga.xyz"}
+NEW_DOMAIN = "https://zazmarga.pp.ua"
+
+@app.middleware("http")
+async def redirect_old_domain(request: Request, call_next):
+    host = request.headers.get("host", "").split(":")[0]
+    if host in OLD_DOMAINS and request.url.path != "/health":
+        url = NEW_DOMAIN + request.url.path
+        if request.url.query:
+            url += "?" + request.url.query
+        return RedirectResponse(url, status_code=301)
+    return await call_next(request)
 
 # ====================== Захист API-ключа ======================
 from fastapi.security import APIKeyHeader

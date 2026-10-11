@@ -1541,7 +1541,7 @@
 	<script>
 
 		// const BACKEND = "http://127.0.0.1:8000";          // на локалі
-		const BACKEND = "https://zazmarga.xyz";   // на проді
+		const BACKEND = window.location.origin;   // на проді (той самий домен, з якого відкрито сайт)
 
 		async function updateMilongasNow() {
 				try {
