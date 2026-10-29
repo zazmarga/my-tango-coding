@@ -149,6 +149,7 @@ app.mount("/images", StaticFiles(directory="images"), name="images")
 
 # Віддаємо index.html як фронт
 @app.get("/")
+@app.head("/", include_in_schema=False)
 def read_index():
     return FileResponse("index.html")
 

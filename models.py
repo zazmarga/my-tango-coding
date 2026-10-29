@@ -1,6 +1,5 @@
 from sqlalchemy import Column, Integer, Text, create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, declarative_base
 
 #
 Base = declarative_base()
@@ -46,8 +45,8 @@ class QuoteCreate(BaseModel):
 	comment_en: Optional[str] = None   # можна не заповнювати
 
 
-	class Config:
-		schema_extra = {
+	model_config = {
+		"json_schema_extra": {
 			"example": {
 				"quote_ua": "Танго — це коли два серця б'ються в одному ритмі.",
 				"quote_es": "El tango es cuando dos corazones laten al mismo ritmo.",
@@ -58,6 +57,7 @@ class QuoteCreate(BaseModel):
 				"comment_en": "# my favourite frase",
 			}
 		}
+	}
 
 
 class QuoteUpdate(BaseModel):  # Для вхідних даних (оновлення)
