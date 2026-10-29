@@ -6,3 +6,4 @@ pydantic
 resend
 python-multipart
 bs4
+certifi>=2026.10.19
